@@ -397,15 +397,13 @@ bool cvdescriptorset::DescriptorSetLayout::ValidateCreateInfo(const debug_report
 
         if (!bindings.insert(binding_info.binding).second) {
             skip |= log_msg(report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
-                            VALIDATION_ERROR_0500022e, "duplicated binding number in VkDescriptorSetLayoutBinding. %s",
-                            validation_error_map[VALIDATION_ERROR_0500022e]);
+                            VALIDATION_ERROR_0500022e, "duplicated binding number in VkDescriptorSetLayoutBinding.");
         }
         if (!valid_type(binding_info.descriptorType)) {
-            skip |=
-                log_msg(report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
-                        VALIDATION_ERROR_05000230,
-                        "invalid type %s ,for push descriptors in VkDescriptorSetLayoutBinding entry %" PRIu32 ". %s",
-                        string_VkDescriptorType(binding_info.descriptorType), i, validation_error_map[VALIDATION_ERROR_05000230]);
+            skip |= log_msg(report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
+                            VALIDATION_ERROR_05000230,
+                            "invalid type %s ,for push descriptors in VkDescriptorSetLayoutBinding entry %" PRIu32 ".",
+                            string_VkDescriptorType(binding_info.descriptorType), i);
         }
         total_descriptors += binding_info.descriptorCount;
     }
@@ -543,12 +541,11 @@ bool cvdescriptorset::DescriptorSetLayout::ValidateCreateInfo(const debug_report
 
     if ((push_descriptor_set) && (total_descriptors > max_push_descriptors)) {
         const char *undefined = push_descriptor_ext ? "" : " -- undefined";
-        skip |= log_msg(report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
-                        VALIDATION_ERROR_05000232,
-                        "for push descriptor, total descriptor count in layout (%" PRIu64
-                        ") must not be greater than VkPhysicalDevicePushDescriptorPropertiesKHR::maxPushDescriptors (%" PRIu32
-                        "%s). %s",
-                        total_descriptors, max_push_descriptors, undefined, validation_error_map[VALIDATION_ERROR_05000232]);
+        skip |= log_msg(
+            report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0, VALIDATION_ERROR_05000232,
+            "for push descriptor, total descriptor count in layout (%" PRIu64
+            ") must not be greater than VkPhysicalDevicePushDescriptorPropertiesKHR::maxPushDescriptors (%" PRIu32 "%s).",
+            total_descriptors, max_push_descriptors, undefined);
     }
 
     return skip;

@@ -5463,7 +5463,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe0179c,
                             "vkCreatePipelineLayout(): max per-stage sampler bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindSamplers limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindSamplers limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_SAMPLERS],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindSamplers);
         }
@@ -5473,7 +5473,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe0179e,
                             "vkCreatePipelineLayout(): max per-stage uniform buffer bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindUniformBuffers limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindUniformBuffers limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_UNIFORM_BUFFERS],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindUniformBuffers);
         }
@@ -5483,7 +5483,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017a0,
                             "vkCreatePipelineLayout(): max per-stage storage buffer bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindStorageBuffers limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindStorageBuffers limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_STORAGE_BUFFERS],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindStorageBuffers);
         }
@@ -5493,7 +5493,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017a2,
                             "vkCreatePipelineLayout(): max per-stage sampled image bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindSampledImages limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindSampledImages limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_SAMPLED_IMAGES],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindSampledImages);
         }
@@ -5503,7 +5503,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017a4,
                             "vkCreatePipelineLayout(): max per-stage storage image bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindStorageImages limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindStorageImages limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_STORAGE_IMAGES],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindStorageImages);
         }
@@ -5514,7 +5514,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017a6,
                             "vkCreatePipelineLayout(): max per-stage input attachment bindings count (%d) exceeds device "
-                            "maxPerStageDescriptorUpdateAfterBindInputAttachments limit (%d). %s",
+                            "maxPerStageDescriptorUpdateAfterBindInputAttachments limit (%d).",
                             max_descriptors_per_stage_update_after_bind[DSL_TYPE_INPUT_ATTACHMENTS],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxPerStageDescriptorUpdateAfterBindInputAttachments);
         }
@@ -5528,7 +5528,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017b8,
                             "vkCreatePipelineLayout(): sum of sampler bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindSamplers limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindSamplers limit (%d).",
                             sum,
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindSamplers);
         }
@@ -5538,7 +5538,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017ba,
                             "vkCreatePipelineLayout(): sum of uniform buffer bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindUniformBuffers limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindUniformBuffers limit (%d).",
                             sum_all_stages_update_after_bind[VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindUniformBuffers);
         }
@@ -5549,7 +5549,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017bc,
                             "vkCreatePipelineLayout(): sum of dynamic uniform buffer bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindUniformBuffersDynamic limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindUniformBuffersDynamic limit (%d).",
                             sum_all_stages_update_after_bind[VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindUniformBuffersDynamic);
         }
@@ -5559,7 +5559,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017be,
                             "vkCreatePipelineLayout(): sum of storage buffer bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindStorageBuffers limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindStorageBuffers limit (%d).",
                             sum_all_stages_update_after_bind[VK_DESCRIPTOR_TYPE_STORAGE_BUFFER],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindStorageBuffers);
         }
@@ -5570,7 +5570,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017c0,
                             "vkCreatePipelineLayout(): sum of dynamic storage buffer bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindStorageBuffersDynamic limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindStorageBuffersDynamic limit (%d).",
                             sum_all_stages_update_after_bind[VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic);
         }
@@ -5584,7 +5584,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
                 log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                         VALIDATION_ERROR_0fe017c2,
                         "vkCreatePipelineLayout(): sum of sampled image bindings among all stages (%d) exceeds device "
-                        "maxDescriptorSetUpdateAfterBindSampledImages limit (%d). %s",
+                        "maxDescriptorSetUpdateAfterBindSampledImages limit (%d).",
                         sum,
                         dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindSampledImages);
         }
@@ -5596,7 +5596,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
                 log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                         VALIDATION_ERROR_0fe017c4,
                         "vkCreatePipelineLayout(): sum of storage image bindings among all stages (%d) exceeds device "
-                        "maxDescriptorSetUpdateAfterBindStorageImages limit (%d). %s",
+                        "maxDescriptorSetUpdateAfterBindStorageImages limit (%d).",
                         sum,
                         dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindStorageImages);
         }
@@ -5606,7 +5606,7 @@ static bool PreCallValiateCreatePipelineLayout(const layer_data *dev_data, const
             skip |= log_msg(dev_data->report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
                             VALIDATION_ERROR_0fe017c6,
                             "vkCreatePipelineLayout(): sum of input attachment bindings among all stages (%d) exceeds device "
-                            "maxDescriptorSetUpdateAfterBindInputAttachments limit (%d). %s",
+                            "maxDescriptorSetUpdateAfterBindInputAttachments limit (%d).",
                             sum_all_stages_update_after_bind[VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT],
                             dev_data->phys_dev_ext_props.descriptor_indexing_props.maxDescriptorSetUpdateAfterBindInputAttachments);
         }
