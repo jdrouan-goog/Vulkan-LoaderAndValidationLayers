@@ -462,7 +462,8 @@ class VkLayerTest : public VkRenderFramework {
     void GenericDrawPreparation(VkCommandBufferObj *commandBuffer, VkPipelineObj &pipelineobj, VkDescriptorSetObj &descriptorSet,
                                 BsoFailSelect failCase);
 
-    void Init(VkPhysicalDeviceFeatures *features = nullptr, VkPhysicalDeviceFeatures2 *features2 = nullptr, const VkCommandPoolCreateFlags flags = 0) {
+    void Init(VkPhysicalDeviceFeatures *features = nullptr, VkPhysicalDeviceFeatures2 *features2 = nullptr,
+              const VkCommandPoolCreateFlags flags = 0) {
         InitFramework(myDbgFunc, m_errorMonitor);
         InitState(features, features2, flags);
     }
@@ -22889,207 +22890,204 @@ TEST_F(VkLayerTest, PushDescriptorSetLayoutWithoutExtension) {
 }
 
 TEST_F(VkLayerTest, DescriptorIndexingSetLayoutWithoutExtension) {
-	TEST_DESCRIPTION("Create an update_after_bind set layout without loading the needed extension.");
-	ASSERT_NO_FATAL_FAILURE(Init());
+    TEST_DESCRIPTION("Create an update_after_bind set layout without loading the needed extension.");
+    ASSERT_NO_FATAL_FAILURE(Init());
 
-	auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>();
-	ds_layout_ci.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
+    auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>();
+    ds_layout_ci.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
 
-	std::string error = "Attemped to use VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT in ";
-	error = error + "VkDescriptorSetLayoutCreateInfo::flags but its required extension ";
-	error = error + VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME;
-	error = error + " has not been enabled.";
+    std::string error = "Attemped to use VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT in ";
+    error = error + "VkDescriptorSetLayoutCreateInfo::flags but its required extension ";
+    error = error + VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME;
+    error = error + " has not been enabled.";
 
-	m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, error.c_str());
-	VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
-	vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
-	m_errorMonitor->VerifyFound();
-	vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+    m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, error.c_str());
+    VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
+    vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+    m_errorMonitor->VerifyFound();
+    vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
 }
 
 TEST_F(VkLayerTest, DescriptorIndexingSetLayout) {
-	TEST_DESCRIPTION("Exercise various create/allocate-time errors related to VK_EXT_descriptor_indexing.");
+    TEST_DESCRIPTION("Exercise various create/allocate-time errors related to VK_EXT_descriptor_indexing.");
 
-	ASSERT_NO_FATAL_FAILURE(InitFramework(myDbgFunc, m_errorMonitor));
-	if (DeviceExtensionSupported(gpu(), nullptr, VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)) {
-		m_device_extension_names.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
-	}
-	else {
-		printf("             %s Extension not supported, skipping tests\n", VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
-		return;
-	}
+    ASSERT_NO_FATAL_FAILURE(InitFramework(myDbgFunc, m_errorMonitor));
+    if (DeviceExtensionSupported(gpu(), nullptr, VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)) {
+        m_device_extension_names.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+    } else {
+        printf("             %s Extension not supported, skipping tests\n", VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+        return;
+    }
 
     // Create a device that enables all supported indexing features except descriptorBindingUniformBufferUpdateAfterBind
-	auto indexingFeatures = lvl_init_struct<VkPhysicalDeviceDescriptorIndexingFeaturesEXT>();
-	auto features2 = lvl_init_struct<VkPhysicalDeviceFeatures2KHR>(&indexingFeatures);
-	vkGetPhysicalDeviceFeatures2(gpu(), &features2);
+    auto indexingFeatures = lvl_init_struct<VkPhysicalDeviceDescriptorIndexingFeaturesEXT>();
+    auto features2 = lvl_init_struct<VkPhysicalDeviceFeatures2KHR>(&indexingFeatures);
+    vkGetPhysicalDeviceFeatures2(gpu(), &features2);
 
     indexingFeatures.descriptorBindingUniformBufferUpdateAfterBind = VK_FALSE;
 
-	ASSERT_NO_FATAL_FAILURE(InitState(nullptr, &features2));
+    ASSERT_NO_FATAL_FAILURE(InitState(nullptr, &features2));
 
-	VkDescriptorBindingFlagsEXT flags = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
-	auto flags_create_info = lvl_init_struct<VkDescriptorSetLayoutBindingFlagsCreateInfoEXT>();
-	flags_create_info.bindingCount = 1;
-	flags_create_info.pBindingFlags = &flags;
+    VkDescriptorBindingFlagsEXT flags = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+    auto flags_create_info = lvl_init_struct<VkDescriptorSetLayoutBindingFlagsCreateInfoEXT>();
+    flags_create_info.bindingCount = 1;
+    flags_create_info.pBindingFlags = &flags;
 
-	VkDescriptorSetLayoutBinding binding = { 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr };
-	auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>(&flags_create_info);
-	ds_layout_ci.bindingCount = 1;
-	ds_layout_ci.pBindings = &binding;
-	VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
+    VkDescriptorSetLayoutBinding binding = {0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr};
+    auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>(&flags_create_info);
+    ds_layout_ci.bindingCount = 1;
+    ds_layout_ci.pBindings = &binding;
+    VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
 
     // VU for VkDescriptorSetLayoutBindingFlagsCreateInfoEXT::bindingCount
-	flags_create_info.bindingCount = 2;
-	m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46a01774);
-	VkResult err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
-	m_errorMonitor->VerifyFound();
-	vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+    flags_create_info.bindingCount = 2;
+    m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46a01774);
+    VkResult err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+    m_errorMonitor->VerifyFound();
+    vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
 
-	flags_create_info.bindingCount = 1;
+    flags_create_info.bindingCount = 1;
 
     // set is missing UPDATE_AFTER_BIND_POOL flag.
-	m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_05001770);
+    m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_05001770);
     // binding uses a feature we disabled
-	m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46a0177a);
-	err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
-	m_errorMonitor->VerifyFound();
-	vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+    m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46a0177a);
+    err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+    m_errorMonitor->VerifyFound();
+    vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
 
-	ds_layout_ci.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
-	ds_layout_ci.bindingCount = 0;
-	flags_create_info.bindingCount = 0;
-	err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
-	ASSERT_VK_SUCCESS(err);
+    ds_layout_ci.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
+    ds_layout_ci.bindingCount = 0;
+    flags_create_info.bindingCount = 0;
+    err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+    ASSERT_VK_SUCCESS(err);
 
-	VkDescriptorPoolSize pool_size = { binding.descriptorType, binding.descriptorCount };
-	auto dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
-	dspci.poolSizeCount = 1;
-	dspci.pPoolSizes = &pool_size;
-	dspci.maxSets = 1;
-	VkDescriptorPool pool;
-	err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
-	ASSERT_VK_SUCCESS(err);
+    VkDescriptorPoolSize pool_size = {binding.descriptorType, binding.descriptorCount};
+    auto dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
+    dspci.poolSizeCount = 1;
+    dspci.pPoolSizes = &pool_size;
+    dspci.maxSets = 1;
+    VkDescriptorPool pool;
+    err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
+    ASSERT_VK_SUCCESS(err);
 
-	auto ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>();
-	ds_alloc_info.descriptorPool = pool;
-	ds_alloc_info.descriptorSetCount = 1;
-	ds_alloc_info.pSetLayouts = &ds_layout;
+    auto ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>();
+    ds_alloc_info.descriptorPool = pool;
+    ds_alloc_info.descriptorSetCount = 1;
+    ds_alloc_info.pSetLayouts = &ds_layout;
 
-	VkDescriptorSet ds = VK_NULL_HANDLE;
+    VkDescriptorSet ds = VK_NULL_HANDLE;
     // mismatch between descriptor set and pool
-	m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_04c017c8);
-	vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
-	m_errorMonitor->VerifyFound();
+    m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_04c017c8);
+    vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
+    m_errorMonitor->VerifyFound();
 
-	vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
-	vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
+    vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+    vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
 
-	if (indexingFeatures.descriptorBindingVariableDescriptorCount) {
-		ds_layout_ci.flags = 0;
-		ds_layout_ci.bindingCount = 1;
-		flags_create_info.bindingCount = 1;
-		flags = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT;
-		err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
-		ASSERT_VK_SUCCESS(err);
+    if (indexingFeatures.descriptorBindingVariableDescriptorCount) {
+        ds_layout_ci.flags = 0;
+        ds_layout_ci.bindingCount = 1;
+        flags_create_info.bindingCount = 1;
+        flags = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT;
+        err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+        ASSERT_VK_SUCCESS(err);
 
-		pool_size = { binding.descriptorType, binding.descriptorCount };
-		dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
-		dspci.poolSizeCount = 1;
-		dspci.pPoolSizes = &pool_size;
-		dspci.maxSets = 1;
-		err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
-		ASSERT_VK_SUCCESS(err);
+        pool_size = {binding.descriptorType, binding.descriptorCount};
+        dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
+        dspci.poolSizeCount = 1;
+        dspci.pPoolSizes = &pool_size;
+        dspci.maxSets = 1;
+        err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
+        ASSERT_VK_SUCCESS(err);
 
-		auto count_alloc_info = lvl_init_struct<VkDescriptorSetVariableDescriptorCountAllocateInfoEXT>();
-		count_alloc_info.descriptorSetCount = 1;
+        auto count_alloc_info = lvl_init_struct<VkDescriptorSetVariableDescriptorCountAllocateInfoEXT>();
+        count_alloc_info.descriptorSetCount = 1;
         // Set variable count larger than what was in the descriptor binding
-		uint32_t variable_count = 2;
-		count_alloc_info.pDescriptorCounts = &variable_count;
+        uint32_t variable_count = 2;
+        count_alloc_info.pDescriptorCounts = &variable_count;
 
-		ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>(&count_alloc_info);
-		ds_alloc_info.descriptorPool = pool;
-		ds_alloc_info.descriptorSetCount = 1;
-		ds_alloc_info.pSetLayouts = &ds_layout;
+        ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>(&count_alloc_info);
+        ds_alloc_info.descriptorPool = pool;
+        ds_alloc_info.descriptorSetCount = 1;
+        ds_alloc_info.pSetLayouts = &ds_layout;
 
-		ds = VK_NULL_HANDLE;
-		m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46c017cc);
-		vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
-		m_errorMonitor->VerifyFound();
+        ds = VK_NULL_HANDLE;
+        m_errorMonitor->SetDesiredFailureMsg(VK_DEBUG_REPORT_ERROR_BIT_EXT, VALIDATION_ERROR_46c017cc);
+        vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
+        m_errorMonitor->VerifyFound();
 
-		vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
-		vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
-	}
+        vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+        vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
+    }
 }
 
 TEST_F(VkLayerTest, DescriptorIndexingUpdateAfterBind) {
-	TEST_DESCRIPTION("Exercise errors for updating a descriptor set after it is bound.");
+    TEST_DESCRIPTION("Exercise errors for updating a descriptor set after it is bound.");
 
-	ASSERT_NO_FATAL_FAILURE(InitFramework(myDbgFunc, m_errorMonitor));
-	if (DeviceExtensionSupported(gpu(), nullptr, VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)) {
-		m_device_extension_names.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
-	}
-	else {
-		printf("             %s Extension not supported, skipping tests\n", VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
-		return;
-	}
+    ASSERT_NO_FATAL_FAILURE(InitFramework(myDbgFunc, m_errorMonitor));
+    if (DeviceExtensionSupported(gpu(), nullptr, VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)) {
+        m_device_extension_names.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+    } else {
+        printf("             %s Extension not supported, skipping tests\n", VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+        return;
+    }
 
     // Create a device that enables all supported indexing features except descriptorBindingUniformBufferUpdateAfterBind
-	auto indexingFeatures = lvl_init_struct<VkPhysicalDeviceDescriptorIndexingFeaturesEXT>();
-	auto features2 = lvl_init_struct<VkPhysicalDeviceFeatures2KHR>(&indexingFeatures);
-	vkGetPhysicalDeviceFeatures2(gpu(), &features2);
+    auto indexingFeatures = lvl_init_struct<VkPhysicalDeviceDescriptorIndexingFeaturesEXT>();
+    auto features2 = lvl_init_struct<VkPhysicalDeviceFeatures2KHR>(&indexingFeatures);
+    vkGetPhysicalDeviceFeatures2(gpu(), &features2);
 
     indexingFeatures.descriptorBindingUniformBufferUpdateAfterBind = VK_FALSE;
 
     if (!indexingFeatures.descriptorBindingStorageBufferUpdateAfterBind) {
-		printf("             Test requires (unsupported) descriptorBindingStorageBufferUpdateAfterBind, skipping\n");
-		return;
+        printf("             Test requires (unsupported) descriptorBindingStorageBufferUpdateAfterBind, skipping\n");
+        return;
     }
 
-	ASSERT_NO_FATAL_FAILURE(InitState(nullptr, &features2, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT));
+    ASSERT_NO_FATAL_FAILURE(InitState(nullptr, &features2, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT));
     ASSERT_NO_FATAL_FAILURE(InitViewport());
     ASSERT_NO_FATAL_FAILURE(InitRenderTarget());
 
-    VkDescriptorBindingFlagsEXT flags[2] = { 0, VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT };
-	auto flags_create_info = lvl_init_struct<VkDescriptorSetLayoutBindingFlagsCreateInfoEXT>();
-	flags_create_info.bindingCount = 2;
-	flags_create_info.pBindingFlags = &flags[0];
+    VkDescriptorBindingFlagsEXT flags[2] = {0, VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT};
+    auto flags_create_info = lvl_init_struct<VkDescriptorSetLayoutBindingFlagsCreateInfoEXT>();
+    flags_create_info.bindingCount = 2;
+    flags_create_info.pBindingFlags = &flags[0];
 
     // Descriptor set has two bindings - only the second is update_after_bind
     VkDescriptorSetLayoutBinding binding[2] = {
-        { 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
-        { 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+        {0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr},
+        {1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr},
     };
-	auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>(&flags_create_info);
+    auto ds_layout_ci = lvl_init_struct<VkDescriptorSetLayoutCreateInfo>(&flags_create_info);
     ds_layout_ci.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
-	ds_layout_ci.bindingCount = 2;
-	ds_layout_ci.pBindings = &binding[0];
-	VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
+    ds_layout_ci.bindingCount = 2;
+    ds_layout_ci.pBindings = &binding[0];
+    VkDescriptorSetLayout ds_layout = VK_NULL_HANDLE;
 
-	VkResult err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
+    VkResult err = vkCreateDescriptorSetLayout(m_device->handle(), &ds_layout_ci, nullptr, &ds_layout);
 
     VkDescriptorPoolSize pool_sizes[2] = {
-        { binding[0].descriptorType, binding[0].descriptorCount },
-        { binding[1].descriptorType, binding[1].descriptorCount },
+        {binding[0].descriptorType, binding[0].descriptorCount},
+        {binding[1].descriptorType, binding[1].descriptorCount},
     };
-	auto dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
+    auto dspci = lvl_init_struct<VkDescriptorPoolCreateInfo>();
     dspci.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT;
-	dspci.poolSizeCount = 2;
-	dspci.pPoolSizes = &pool_sizes[0];
-	dspci.maxSets = 1;
-	VkDescriptorPool pool;
-	err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
-	ASSERT_VK_SUCCESS(err);
+    dspci.poolSizeCount = 2;
+    dspci.pPoolSizes = &pool_sizes[0];
+    dspci.maxSets = 1;
+    VkDescriptorPool pool;
+    err = vkCreateDescriptorPool(m_device->handle(), &dspci, nullptr, &pool);
+    ASSERT_VK_SUCCESS(err);
 
-	auto ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>();
-	ds_alloc_info.descriptorPool = pool;
-	ds_alloc_info.descriptorSetCount = 1;
-	ds_alloc_info.pSetLayouts = &ds_layout;
+    auto ds_alloc_info = lvl_init_struct<VkDescriptorSetAllocateInfo>();
+    ds_alloc_info.descriptorPool = pool;
+    ds_alloc_info.descriptorSetCount = 1;
+    ds_alloc_info.pSetLayouts = &ds_layout;
 
-	VkDescriptorSet ds = VK_NULL_HANDLE;
-	vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
-	ASSERT_VK_SUCCESS(err);
-
+    VkDescriptorSet ds = VK_NULL_HANDLE;
+    vkAllocateDescriptorSets(m_device->handle(), &ds_alloc_info, &ds);
+    ASSERT_VK_SUCCESS(err);
 
     VkBufferCreateInfo buffCI = {};
     buffCI.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -23176,8 +23174,7 @@ TEST_F(VkLayerTest, DescriptorIndexingUpdateAfterBind) {
     for (uint32_t i = 0; i < 2; ++i) {
         m_commandBuffer->begin();
 
-        vkCmdBindDescriptorSets(m_commandBuffer->handle(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1,
-                                &ds, 0, NULL);
+        vkCmdBindDescriptorSets(m_commandBuffer->handle(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_layout, 0, 1, &ds, 0, NULL);
 
         m_commandBuffer->BeginRenderPass(m_renderPassBeginInfo);
         vkCmdBindPipeline(m_commandBuffer->handle(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipe.handle());
@@ -23188,7 +23185,7 @@ TEST_F(VkLayerTest, DescriptorIndexingUpdateAfterBind) {
         // Valid to update binding 1 after being bound
         vkUpdateDescriptorSets(m_device->device(), 1, &descriptor_write[1], 0, NULL);
         m_errorMonitor->VerifyNotFound();
-    
+
         if (i == 0) {
             // expect no errors
             m_commandBuffer->end();
@@ -23206,13 +23203,12 @@ TEST_F(VkLayerTest, DescriptorIndexingUpdateAfterBind) {
         }
     }
 
-	vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
-	vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
+    vkDestroyDescriptorSetLayout(m_device->handle(), ds_layout, nullptr);
+    vkDestroyDescriptorPool(m_device->handle(), pool, nullptr);
     vkDestroyBuffer(m_device->handle(), dyub, NULL);
     vkFreeMemory(m_device->handle(), mem, NULL);
     vkDestroyPipelineLayout(m_device->handle(), pipeline_layout, NULL);
 }
-
 
 TEST_F(VkLayerTest, AllocatePushDescriptorSet) {
     TEST_DESCRIPTION("Attempt to allocate a push descriptor set.");

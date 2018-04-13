@@ -1169,8 +1169,7 @@ static bool descriptor_type_match(shader_module const *module, uint32_t type_id,
 static bool require_feature(debug_report_data const *report_data, VkBool32 feature, char const *feature_name) {
     if (!feature) {
         if (log_msg(report_data, VK_DEBUG_REPORT_ERROR_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, 0,
-                    SHADER_CHECKER_FEATURE_NOT_ENABLED,
-                    "Shader requires %s but is not enabled on the device", feature_name)) {
+                    SHADER_CHECKER_FEATURE_NOT_ENABLED, "Shader requires %s but is not enabled on the device", feature_name)) {
             return true;
         }
     }

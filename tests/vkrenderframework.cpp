@@ -294,7 +294,8 @@ void VkRenderFramework::GetPhysicalDeviceFeatures(VkPhysicalDeviceFeatures *feat
     }
 }
 
-void VkRenderFramework::InitState(VkPhysicalDeviceFeatures *features, VkPhysicalDeviceFeatures2 *features2, const VkCommandPoolCreateFlags flags) {
+void VkRenderFramework::InitState(VkPhysicalDeviceFeatures *features, VkPhysicalDeviceFeatures2 *features2,
+                                  const VkCommandPoolCreateFlags flags) {
     // Remove any unsupported device extension names from list
     for (auto ext = m_device_extension_names.begin(); ext != m_device_extension_names.end();) {
         if (!DeviceExtensionSupported(objs[0], nullptr, *ext)) {
